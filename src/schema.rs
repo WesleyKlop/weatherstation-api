@@ -1,7 +1,7 @@
 table! {
     measurements (uuid) {
         uuid -> Binary,
-        id -> Varchar,
+        id -> Char,
         humidity -> Float,
         temperature -> Float,
         carbon_dioxide -> Float,

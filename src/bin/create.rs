@@ -1,17 +1,20 @@
 extern crate diesel;
 
-use weatherstation_api::establish_connection;
 use std::process;
-use weatherstation_api::models::{NewMeasurement, create_measurement};
+use weatherstation_api::establish_connection;
+use weatherstation_api::models::{create_measurement, NewMeasurement};
 
 fn main() {
     let connection = establish_connection();
 
-    let result = create_measurement(NewMeasurement {
-        humidity: &70.0,
-        temperature: &20.0,
-        carbon_dioxide: &600.0,
-    }, connection);
+    let result = create_measurement(
+        NewMeasurement {
+            humidity: &70.0,
+            temperature: &20.0,
+            carbon_dioxide: &600.0,
+        },
+        connection,
+    );
 
     match result {
         Ok(true) => {
