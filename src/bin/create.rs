@@ -1,7 +1,7 @@
 extern crate diesel;
 
 use std::process;
-use weatherstation_api::establish_connection;
+use weatherstation_api::database::establish_connection;
 use weatherstation_api::models::{create_measurement, NewMeasurement};
 
 fn main() {

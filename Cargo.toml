@@ -5,8 +5,9 @@ authors = ["Wesley Klop <wesley19097@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-diesel = { version = "1.4.4", features = ["mysql", "uuid", "chrono"] }
-dotenv = "0.15.0"
-uuid = "0.8.2"
-chrono = "0.4.19"
 actix-web = "3"
+chrono = "0.4.19"
+diesel = { version = "1.4.4", features = ["chrono", "mysql", "r2d2", "uuid"] }
+dotenv = "0.15.0"
+r2d2 = "0.8.9"
+uuid = "0.8.2"

@@ -1,8 +1,8 @@
 extern crate diesel;
 
 use std::env;
-use weatherstation_api::establish_connection;
-use weatherstation_api::models::{find_measurement, Measurement};
+use weatherstation_api::database::establish_connection;
+use weatherstation_api::models::find_measurement;
 
 fn main() -> Result<(), &'static str> {
     let args: Vec<String> = env::args().collect();
@@ -10,7 +10,7 @@ fn main() -> Result<(), &'static str> {
         return Err("Missing argument uuid");
     }
     let connection = establish_connection();
-    let measurement: Measurement =
+    let measurement =
         find_measurement(args[1].to_owned(), connection).expect("Error loading measurements");
 
     println!("Found measurement, created at: {}", measurement.created_at);
