@@ -4,8 +4,11 @@ use std::env;
 use weatherstation_api::establish_connection;
 use weatherstation_api::models::{find_measurement, Measurement};
 
-fn main() {
+fn main() -> Result<(), &'static str> {
     let args: Vec<String> = env::args().collect();
+    if args.len() < 2 {
+        return Err("Missing argument uuid");
+    }
     let connection = establish_connection();
     let measurement: Measurement =
         find_measurement(args[1].to_owned(), connection).expect("Error loading measurements");
@@ -15,4 +18,6 @@ fn main() {
         "{}°C, {}%, {}ppm",
         measurement.temperature, measurement.humidity, measurement.carbon_dioxide
     );
+
+    Ok(())
 }
