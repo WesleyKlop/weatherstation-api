@@ -16,10 +16,14 @@ async fn main() -> std::io::Result<()> {
             .wrap(middleware::NormalizePath::default())
             .data(pool.clone())
             .service(
-                scope("/api/measurements")
-                    .service(routes::all_measurements)
-                    .service(routes::measurement_by_id)
-                    .service(routes::create_measurement),
+                scope("/api")
+                    .service(
+                        scope("/measurements")
+                            .service(routes::all_measurements)
+                            .service(routes::measurement_by_id)
+                            .service(routes::create_measurement),
+                    )
+                    .service(routes::health),
             )
     })
     .bind(bind_address())?

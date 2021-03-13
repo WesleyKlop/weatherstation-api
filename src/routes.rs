@@ -1,6 +1,7 @@
 use crate::database::DbPool;
 use crate::models::{find_measurement, find_measurements, save_measurement, NewMeasurement};
 use actix_web::{get, post, web, HttpResponse, Responder};
+use serde::Serialize;
 use uuid::Uuid;
 
 #[get("/")]
@@ -30,5 +31,17 @@ pub async fn create_measurement(
 
     web::block(move || save_measurement(new_measurement.into_inner(), &connection))
         .await
-        .map(|measurements| HttpResponse::Ok().json(measurements))
+        .map(|measurements| HttpResponse::Created().json(measurements))
+}
+
+#[get("/health/")]
+pub async fn health() -> impl Responder {
+    #[derive(Serialize)]
+    struct Health {
+        status: String,
+    }
+
+    HttpResponse::Ok().json(Health {
+        status: "ok".to_string(),
+    })
 }
