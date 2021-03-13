@@ -1,4 +1,4 @@
-use actix_web::{App, HttpServer};
+use actix_web::{middleware, web::scope, App, HttpServer};
 use weatherstation_api::config::bind_address;
 use weatherstation_api::database::create_pool;
 use weatherstation_api::routes;
@@ -9,8 +9,13 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(|| {
         App::new()
+            .wrap(middleware::NormalizePath::default())
             .data(create_pool())
-            .service(routes::all_measurements)
+            .service(
+                scope("/api/measurements")
+                    .service(routes::all_measurements)
+                    .service(routes::measurement_by_id),
+            )
     })
     .bind(bind_address())?
     .run()
