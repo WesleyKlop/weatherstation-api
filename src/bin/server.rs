@@ -14,7 +14,8 @@ async fn main() -> std::io::Result<()> {
             .service(
                 scope("/api/measurements")
                     .service(routes::all_measurements)
-                    .service(routes::measurement_by_id),
+                    .service(routes::measurement_by_id)
+                    .service(routes::create_measurement),
             )
     })
     .bind(bind_address())?

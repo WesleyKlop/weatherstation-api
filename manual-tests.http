@@ -1,6 +1,7 @@
 
 ### Successful test: check response status is 200
 GET http://127.0.0.1:8080/api/measurements
+Accept: application/json
 
 > {%
 client.test("Getting all measurements works", function() {
@@ -10,9 +11,21 @@ client.test("Getting all measurements works", function() {
 
 ### Successful test: check response status is 200
 GET http://127.0.0.1:8080/api/measurements/a9a768a0-82b3-11eb-a536-5d7b5228d4ac
+Accept: application/json
 
 > {%
 client.test("Getting a specific measurements works", function() {
   client.assert(response.status === 200, "Response status is not 200");
 });
 %}
+
+###
+
+POST http://127.0.0.1:8080/api/measurements/
+Content-Type: application/json
+
+{
+  "humidity": 1337,
+  "carbon_dioxide": 420,
+  "temperature": 22.4
+}
