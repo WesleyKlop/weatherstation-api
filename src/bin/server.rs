@@ -7,10 +7,12 @@ use weatherstation_api::routes;
 async fn main() -> std::io::Result<()> {
     dotenv::dotenv().ok();
 
-    HttpServer::new(|| {
+    let pool = create_pool();
+
+    HttpServer::new(move || {
         App::new()
             .wrap(middleware::NormalizePath::default())
-            .data(create_pool())
+            .data(pool.clone())
             .service(
                 scope("/api/measurements")
                     .service(routes::all_measurements)

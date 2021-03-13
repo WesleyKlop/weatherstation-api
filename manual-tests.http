@@ -10,14 +10,8 @@ client.test("Getting all measurements works", function() {
 %}
 
 ### Successful test: check response status is 200
-GET http://127.0.0.1:8080/api/measurements/a9a768a0-82b3-11eb-a536-5d7b5228d4ac
+GET http://127.0.0.1:8080/api/measurements/05c6c83f-6697-43be-bf1a-e3b3a297f8d3
 Accept: application/json
-
-> {%
-client.test("Getting a specific measurements works", function() {
-  client.assert(response.status === 200, "Response status is not 200");
-});
-%}
 
 ###
 

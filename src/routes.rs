@@ -18,7 +18,7 @@ pub async fn measurement_by_id(pool: web::Data<DbPool>, id: web::Path<Uuid>) -> 
     let connection = pool.get().expect("Failed to db");
     println!("Measurement by id!!");
 
-    web::block(move || find_measurement(id.into_inner().to_string(), &connection))
+    web::block(move || find_measurement(id.into_inner(), &connection))
         .await
         .map_err(|err| dbg!(err))
         .map(|measurement| HttpResponse::Ok().json(measurement))

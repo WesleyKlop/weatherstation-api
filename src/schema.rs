@@ -1,10 +1,9 @@
 table! {
-    measurements (uuid) {
-        uuid -> Binary,
-        id -> Char,
-        humidity -> Float,
-        temperature -> Float,
-        carbon_dioxide -> Float,
+    measurements (id) {
+        id -> Uuid,
+        humidity -> Float8,
+        temperature -> Float8,
+        carbon_dioxide -> Float8,
         created_at -> Timestamp,
         updated_at -> Nullable<Timestamp>,
     }

@@ -1,27 +1,21 @@
 use crate::config::database_url;
 use diesel::r2d2::{ConnectionManager, PoolError};
-use diesel::{select, Connection, MysqlConnection, RunQueryDsl, sql_types};
+use diesel::{Connection, PgConnection};
 use r2d2::Pool;
 
-pub type DbPool = Pool<ConnectionManager<MysqlConnection>>;
+pub type DbPool = Pool<ConnectionManager<PgConnection>>;
 
-no_arg_sql_function!(last_insert_id, sql_types::Binary);
-
-pub fn establish_connection() -> MysqlConnection {
+pub fn establish_connection() -> PgConnection {
     let database_url = database_url();
-    MysqlConnection::establish(&database_url)
+    PgConnection::establish(&database_url)
         .unwrap_or_else(|_| panic!("Error connecting to {}", database_url))
 }
 
 fn init_pool(database_url: &str) -> Result<DbPool, PoolError> {
-    let manager = ConnectionManager::<MysqlConnection>::new(database_url);
+    let manager = ConnectionManager::<PgConnection>::new(database_url);
     Pool::builder().build(manager)
 }
 
 pub fn create_pool() -> DbPool {
     init_pool(database_url().as_str()).expect("Failed to create pool")
-}
-
-pub fn get_last_insert_id(connection: &MysqlConnection) -> sql_types::Binary {
-    select(last_insert_id).get_result::<sql_types::Binary>(connection).unwrap()
 }
