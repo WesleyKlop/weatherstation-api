@@ -13,9 +13,21 @@ client.test("Getting all measurements works", function() {
 GET http://127.0.0.1:8080/api/measurements/05c6c83f-6697-43be-bf1a-e3b3a297f8d3
 Accept: application/json
 
+### Successful test: check response status is 200
+GET http://127.0.0.1:8080/api/measurements/foobarbaz
+Accept: application/json
+
+### Successful test: check response status is 200
+GET http://127.0.0.1:8080/api/measurements/05c6c83f669743bebf1ae3b3a297f8d3
+Accept: application/json
+
+### Successful test: check response status is 200
+GET http://127.0.0.1:8080/api/measurements/06c6c83f669743bebf1ae3b3a297f8d3
+Accept: application/json
+
 ###
 
-POST http://127.0.0.1:8080/api/measurements/
+POST http://127.0.0.1:8080/api/measurements
 Content-Type: application/json
 
 {

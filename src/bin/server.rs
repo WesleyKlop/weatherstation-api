@@ -6,11 +6,13 @@ use weatherstation_api::routes;
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv::dotenv().ok();
+    env_logger::init();
 
     let pool = create_pool();
 
     HttpServer::new(move || {
         App::new()
+            .wrap(middleware::Logger::default())
             .wrap(middleware::NormalizePath::default())
             .data(pool.clone())
             .service(

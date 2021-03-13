@@ -9,18 +9,15 @@ pub async fn all_measurements(pool: web::Data<DbPool>) -> impl Responder {
 
     web::block(move || find_measurements(50, &connection))
         .await
-        .map_err(|err| dbg!(err))
         .map(|measurements| HttpResponse::Ok().json(measurements))
 }
 
-#[get("/{id}")]
+#[get("/{id}/")]
 pub async fn measurement_by_id(pool: web::Data<DbPool>, id: web::Path<Uuid>) -> impl Responder {
     let connection = pool.get().expect("Failed to db");
-    println!("Measurement by id!!");
 
     web::block(move || find_measurement(id.into_inner(), &connection))
         .await
-        .map_err(|err| dbg!(err))
         .map(|measurement| HttpResponse::Ok().json(measurement))
 }
 
@@ -33,6 +30,5 @@ pub async fn create_measurement(
 
     web::block(move || save_measurement(new_measurement.into_inner(), &connection))
         .await
-        .map_err(|err| dbg!(err))
         .map(|measurements| HttpResponse::Ok().json(measurements))
 }
