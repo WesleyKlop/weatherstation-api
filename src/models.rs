@@ -5,9 +5,11 @@ use chrono::NaiveDateTime;
 use diesel::prelude::*;
 use diesel::result::Error;
 use diesel::{insert_into, Insertable, MysqlConnection, QueryResult, RunQueryDsl};
+use serde::Serialize;
 
-#[derive(Queryable)]
+#[derive(Queryable, Serialize)]
 pub struct Measurement {
+    #[serde(skip_serializing)]
     pub uuid: Vec<u8>,
     pub id: String,
     pub humidity: f32,
@@ -37,12 +39,13 @@ pub fn create_measurement(
 
 pub fn find_measurements(
     limit: i64,
-    connection: MysqlConnection,
+    connection: &MysqlConnection,
 ) -> Result<Vec<Measurement>, Error> {
+    assert!(limit > 0);
     measurements_table
         .order(created_at)
         .limit(limit)
-        .load::<Measurement>(&connection)
+        .load::<Measurement>(connection)
 }
 
 pub fn find_measurement(

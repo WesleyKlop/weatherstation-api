@@ -1,10 +1,9 @@
 
 ### Successful test: check response status is 200
-GET http://{{$APP_ADDRESS}}:{{$APP_PORT}}/hey
+GET http://127.0.0.1:8080/
 
 > {%
-client.test("Request returns correct text", function() {
+client.test("Getting all measurements works", function() {
   client.assert(response.status === 200, "Response status is not 200");
-  client.assert(response.body === 'Hey there!')
 });
 %}
