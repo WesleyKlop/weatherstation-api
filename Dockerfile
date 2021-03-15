@@ -1,6 +1,6 @@
-FROM rust:1.50-alpine as builder
+FROM rust:1.50 as builder
 
-RUN apk add --no-cache musl-dev postgresql-dev
+RUN apt-get update && apt-get install -y libpq-dev
 
 WORKDIR /app
 COPY Cargo.toml Cargo.lock ./
@@ -8,9 +8,8 @@ COPY src ./src
 
 RUN cargo build --release --bin server
 
-FROM alpine:3
-
-RUN apk add --no-cache libpq
+FROM debian:buster-slim
+#RUN apt-get update && apt-get install -y  && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /app/target/release/server /usr/local/bin/server
 
