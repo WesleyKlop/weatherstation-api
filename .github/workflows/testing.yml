@@ -1,0 +1,51 @@
+name: Automated tests
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+env:
+  RUST_VERSION: stable
+
+jobs:
+  lint:
+    name: Lint code
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ env.RUST_VERSION }}
+          override: true
+          components: rustfmt, clippy
+      - run: rustup component add rustfmt
+      - uses: actions-rs/cargo@v1
+        name: Cargo fmt
+        with:
+          command: fmt
+          args: --all -- --check
+      - uses: actions-rs/cargo@v1
+        name: Cargo clippy
+        with:
+          command: clippy
+          args: -- -D warnings
+
+  build:
+    name: Build
+    needs: [lint]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ env.RUST_VERSION }}
+          override: true
+      - uses: actions-rs/cargo@v1
+        name: Cargo clippy
+        with:
+          command: build
+          args: --release --bin server
