@@ -3,7 +3,7 @@ FROM rust:1.50 as builder
 ENV CARGO_HOME="/cargo"
 
 RUN apt-get update \
- && apt-get install -y libpq-dev
+ && apt-get install -y libpq-dev \
  && cargo install diesel_cli --no-default-features --features "postgres"
 
 WORKDIR /app
