@@ -21,7 +21,13 @@ jobs:
           toolchain: ${{ env.RUST_VERSION }}
           override: true
           components: rustfmt, clippy
-      - run: rustup component add rustfmt
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - uses: actions-rs/cargo@v1
         name: Cargo fmt
         with:
@@ -44,8 +50,15 @@ jobs:
           profile: minimal
           toolchain: ${{ env.RUST_VERSION }}
           override: true
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - uses: actions-rs/cargo@v1
-        name: Cargo clippy
+        name: Cargo build
         with:
           command: build
           args: --release --bin server
