@@ -1,2 +1,3 @@
-drop extension "uuid-ossp";
+drop extension if exists "uuid-ossp";
+
 drop table measurements;
