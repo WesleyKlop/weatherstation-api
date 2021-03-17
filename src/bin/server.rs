@@ -1,7 +1,30 @@
-use actix_web::{middleware, web::scope, App, HttpServer};
+use actix_web::dev::ServiceRequest;
+use actix_web::error::ErrorUnauthorized;
+use actix_web::middleware::Condition;
+use actix_web::{middleware, web, web::scope, App, Error, HttpMessage, HttpServer};
+use actix_web_httpauth::extractors::bearer::BearerAuth;
+use actix_web_httpauth::middleware::HttpAuthentication;
 use weatherstation_api::config::bind_address;
-use weatherstation_api::database::create_pool;
+use weatherstation_api::database::{create_pool, DbPool};
+use weatherstation_api::models::find_device_by_token;
 use weatherstation_api::routes;
+
+async fn validator(req: ServiceRequest, credentials: BearerAuth) -> Result<ServiceRequest, Error> {
+    let connection = req
+        .app_data::<DbPool>()
+        .unwrap()
+        .get()
+        .expect("Failed to get connection");
+
+    web::block(move || find_device_by_token(credentials.token().to_string(), &connection))
+        .await
+        .map(|device| {
+            req.extensions_mut().insert(device);
+
+            req
+        })
+        .map_err(ErrorUnauthorized)
+}
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -9,6 +32,7 @@ async fn main() -> std::io::Result<()> {
     env_logger::init();
 
     let pool = create_pool();
+    let enable_auth = std::env::var("APP_ENABLE_AUTH") == Ok("true".into());
 
     HttpServer::new(move || {
         App::new()
@@ -19,6 +43,10 @@ async fn main() -> std::io::Result<()> {
                 scope("/api")
                     .service(
                         scope("/measurements")
+                            .wrap(Condition::new(
+                                enable_auth,
+                                HttpAuthentication::bearer(validator),
+                            ))
                             .service(routes::all_measurements)
                             .service(routes::measurement_by_id)
                             .service(routes::create_measurement),

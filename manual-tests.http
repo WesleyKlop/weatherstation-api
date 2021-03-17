@@ -2,6 +2,7 @@
 ### Successful test: check response status is 200
 GET http://127.0.0.1:8080/api/measurements
 Accept: application/json
+Authorization: Bearer yeet
 
 > {%
 client.test("Getting all measurements works", function() {

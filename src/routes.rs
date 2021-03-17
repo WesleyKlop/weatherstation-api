@@ -1,5 +1,5 @@
-use crate::database::DbPool;
-use crate::models::{find_measurement, find_measurements, save_measurement, NewMeasurement};
+use super::database::DbPool;
+use super::models::{find_measurement, find_measurements, save_measurement, NewMeasurement};
 use actix_web::{get, post, web, HttpResponse, Responder};
 use serde::Serialize;
 use uuid::Uuid;

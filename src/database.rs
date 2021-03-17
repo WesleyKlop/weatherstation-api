@@ -1,4 +1,4 @@
-use crate::config::database_url;
+use super::config::database_url;
 use diesel::r2d2::{ConnectionManager, PoolError};
 use diesel::{Connection, PgConnection};
 use r2d2::Pool;
