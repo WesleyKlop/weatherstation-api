@@ -72,3 +72,9 @@ pub fn find_device_by_token(token: String, connection: &PgConnection) -> Result<
         .filter(devices::token.eq(token))
         .first(connection)
 }
+
+pub fn register_device(device: NewDevice, connection: &PgConnection) -> QueryResult<Device> {
+    insert_into(devices::table)
+        .values(device)
+        .get_result(connection)
+}

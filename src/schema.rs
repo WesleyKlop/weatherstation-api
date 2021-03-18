@@ -23,7 +23,4 @@ table! {
 
 joinable!(measurements -> devices (created_by));
 
-allow_tables_to_appear_in_same_query!(
-    devices,
-    measurements,
-);
+allow_tables_to_appear_in_same_query!(devices, measurements,);
