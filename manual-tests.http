@@ -30,6 +30,7 @@ Accept: application/json
 
 POST http://127.0.0.1:8080/api/measurements
 Content-Type: application/json
+Authorization: Bearer 3f3bd49c762d68a60ab40373aa9606cb
 
 {
   "humidity": 1337,

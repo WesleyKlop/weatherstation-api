@@ -3,8 +3,8 @@ table! {
         id -> Uuid,
         location -> Varchar,
         token -> Bpchar,
-        created_at -> Timestamp,
-        updated_at -> Nullable<Timestamp>,
+        created_at -> Timestamptz,
+        updated_at -> Nullable<Timestamptz>,
     }
 }
 
@@ -14,8 +14,8 @@ table! {
         humidity -> Float8,
         temperature -> Float8,
         carbon_dioxide -> Float8,
-        created_at -> Timestamp,
-        updated_at -> Nullable<Timestamp>,
+        created_at -> Timestamptz,
+        updated_at -> Nullable<Timestamptz>,
         location -> Varchar,
         created_by -> Uuid,
     }

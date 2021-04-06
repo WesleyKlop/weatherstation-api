@@ -10,11 +10,8 @@ use weatherstation_api::models::find_device_by_token;
 use weatherstation_api::routes;
 
 async fn validator(req: ServiceRequest, credentials: BearerAuth) -> Result<ServiceRequest, Error> {
-    let connection = req
-        .app_data::<DbPool>()
-        .unwrap()
-        .get()
-        .expect("Failed to get connection");
+    let pool = req.app_data::<DbPool>().unwrap();
+    let connection = pool.get().expect("gdfasd");
 
     web::block(move || find_device_by_token(credentials.token().to_string(), &connection))
         .await
@@ -32,7 +29,7 @@ async fn main() -> std::io::Result<()> {
     env_logger::init();
 
     let pool = create_pool();
-    let enable_auth = std::env::var("APP_ENABLE_AUTH") == Ok("true".into());
+    const ENABLE_AUTH: bool = std::env::var("APP_ENABLE_AUTH") == Ok("true".into());
 
     HttpServer::new(move || {
         App::new()
@@ -44,7 +41,7 @@ async fn main() -> std::io::Result<()> {
                     .service(
                         scope("/measurements")
                             .wrap(Condition::new(
-                                enable_auth,
+                                ENABLE_AUTH,
                                 HttpAuthentication::bearer(validator),
                             ))
                             .service(routes::all_measurements)

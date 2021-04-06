@@ -1,6 +1,6 @@
 use super::schema::devices;
 use super::schema::measurements;
-use chrono::NaiveDateTime;
+use chrono::{DateTime, Utc};
 use diesel::prelude::*;
 use diesel::result::Error;
 use diesel::{insert_into, Insertable, PgConnection, QueryResult, RunQueryDsl};
@@ -14,8 +14,8 @@ pub struct Measurement {
     pub humidity: f64,
     pub temperature: f64,
     pub carbon_dioxide: f64,
-    pub created_at: NaiveDateTime,
-    pub updated_at: Option<NaiveDateTime>,
+    pub created_at: DateTime<Utc>,
+    pub updated_at: Option<DateTime<Utc>>,
     pub location: String,
     pub created_by: Uuid,
 }
@@ -56,8 +56,8 @@ pub struct Device {
     pub id: Uuid,
     pub location: String,
     pub token: String,
-    pub created_at: NaiveDateTime,
-    pub updated_at: Option<NaiveDateTime>,
+    pub created_at: DateTime<Utc>,
+    pub updated_at: Option<DateTime<Utc>>,
 }
 
 #[derive(Insertable, Deserialize)]
@@ -77,4 +77,10 @@ pub fn register_device(device: NewDevice, connection: &PgConnection) -> QueryRes
     insert_into(devices::table)
         .values(device)
         .get_result(connection)
+}
+
+pub fn find_devices(connection: &PgConnection) -> Result<Vec<Device>, Error> {
+    devices::table
+        .order(devices::created_at)
+        .load::<Device>(connection)
 }
