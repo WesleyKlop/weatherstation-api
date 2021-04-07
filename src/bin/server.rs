@@ -9,12 +9,8 @@ use weatherstation_api::models::find_device_by_token;
 use weatherstation_api::routes;
 
 async fn validator(req: ServiceRequest, credentials: BearerAuth) -> Result<ServiceRequest, Error> {
-    if req.path() == "/api/health" {
-        return Ok(req);
-    }
-
-    let pool: &DbPool = req.app_data().unwrap();
-    let connection = pool.get().expect("gdfasd");
+    let pool = req.app_data::<DbPool>().unwrap();
+    let connection = pool.get().expect("Failed to get database connection.");
 
     web::block(move || find_device_by_token(credentials.token().to_string(), &connection))
         .await
