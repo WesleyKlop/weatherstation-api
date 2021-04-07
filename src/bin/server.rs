@@ -1,6 +1,6 @@
 use actix_web::dev::ServiceRequest;
 use actix_web::error::ErrorUnauthorized;
-use actix_web::{middleware, web, web::scope, App, Error, HttpMessage, HttpServer};
+use actix_web::{middleware, web, web::scope, web::Data, App, Error, HttpMessage, HttpServer};
 use actix_web_httpauth::extractors::bearer::BearerAuth;
 use actix_web_httpauth::middleware::HttpAuthentication;
 use weatherstation_api::config::bind_address;
@@ -9,7 +9,7 @@ use weatherstation_api::models::find_device_by_token;
 use weatherstation_api::routes;
 
 async fn validator(req: ServiceRequest, credentials: BearerAuth) -> Result<ServiceRequest, Error> {
-    let pool = req.app_data::<DbPool>().unwrap();
+    let pool = req.app_data::<Data<DbPool>>().unwrap();
     let connection = pool.get().expect("Failed to get database connection.");
 
     web::block(move || find_device_by_token(credentials.token().to_string(), &connection))

@@ -26,6 +26,7 @@ pub struct NewMeasurement {
     pub humidity: f64,
     pub temperature: f64,
     pub carbon_dioxide: f64,
+    pub created_by: Uuid,
 }
 
 pub fn save_measurement(
@@ -51,7 +52,7 @@ pub fn find_measurement(id: Uuid, connection: &PgConnection) -> Result<Measureme
         .first(connection)
 }
 
-#[derive(Queryable, Serialize, Identifiable)]
+#[derive(Queryable, Serialize, Identifiable, Clone)]
 pub struct Device {
     pub id: Uuid,
     pub location: String,
