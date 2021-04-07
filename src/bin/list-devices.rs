@@ -9,10 +9,10 @@ fn main() {
 
     let devices = find_devices(&pool).expect("Failed to get devices");
 
-    println!("{:12}  |  {}  |  {}", "Location", "token", "added at");
+    println!("{:12}  |  {:32}  |  {}", "location", "token", "added at");
     for device in devices {
         println!(
-            "{:12}  |  {}  |  {}",
+            "{:12}  |  {:32}  |  {}",
             device.location, device.token, device.created_at,
         );
     }

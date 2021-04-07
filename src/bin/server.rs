@@ -1,6 +1,5 @@
 use actix_web::dev::ServiceRequest;
 use actix_web::error::ErrorUnauthorized;
-use actix_web::middleware::Condition;
 use actix_web::{middleware, web, web::scope, App, Error, HttpMessage, HttpServer};
 use actix_web_httpauth::extractors::bearer::BearerAuth;
 use actix_web_httpauth::middleware::HttpAuthentication;
@@ -10,7 +9,11 @@ use weatherstation_api::models::find_device_by_token;
 use weatherstation_api::routes;
 
 async fn validator(req: ServiceRequest, credentials: BearerAuth) -> Result<ServiceRequest, Error> {
-    let pool = req.app_data::<DbPool>().unwrap();
+    if req.path() == "/api/health" {
+        return Ok(req);
+    }
+
+    let pool: &DbPool = req.app_data().unwrap();
     let connection = pool.get().expect("gdfasd");
 
     web::block(move || find_device_by_token(credentials.token().to_string(), &connection))
@@ -29,7 +32,7 @@ async fn main() -> std::io::Result<()> {
     env_logger::init();
 
     let pool = create_pool();
-    const ENABLE_AUTH: bool = std::env::var("APP_ENABLE_AUTH") == Ok("true".into());
+    let enable_auth: bool = std::env::var("APP_ENABLE_AUTH") == Ok("true".into());
 
     HttpServer::new(move || {
         App::new()
@@ -40,8 +43,8 @@ async fn main() -> std::io::Result<()> {
                 scope("/api")
                     .service(
                         scope("/measurements")
-                            .wrap(Condition::new(
-                                ENABLE_AUTH,
+                            .wrap(middleware::Condition::new(
+                                enable_auth,
                                 HttpAuthentication::bearer(validator),
                             ))
                             .service(routes::all_measurements)
