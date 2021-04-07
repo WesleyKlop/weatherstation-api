@@ -28,7 +28,6 @@ async fn main() -> std::io::Result<()> {
     env_logger::init();
 
     let pool = create_pool();
-    let enable_auth: bool = std::env::var("APP_ENABLE_AUTH") == Ok("true".into());
 
     HttpServer::new(move || {
         App::new()
@@ -39,10 +38,7 @@ async fn main() -> std::io::Result<()> {
                 scope("/api")
                     .service(
                         scope("/measurements")
-                            .wrap(middleware::Condition::new(
-                                enable_auth,
-                                HttpAuthentication::bearer(validator),
-                            ))
+                            .wrap(HttpAuthentication::bearer(validator))
                             .service(routes::all_measurements)
                             .service(routes::measurement_by_id)
                             .service(routes::create_measurement),
