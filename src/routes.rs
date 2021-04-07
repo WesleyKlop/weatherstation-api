@@ -45,6 +45,7 @@ pub async fn create_measurement(
                 humidity: new_measurement.humidity,
                 temperature: new_measurement.temperature,
                 carbon_dioxide: new_measurement.carbon_dioxide,
+                location: device.location,
                 created_by: device.id,
             },
             &connection,

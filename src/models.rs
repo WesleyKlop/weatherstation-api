@@ -26,6 +26,7 @@ pub struct NewMeasurement {
     pub humidity: f64,
     pub temperature: f64,
     pub carbon_dioxide: f64,
+    pub location: String,
     pub created_by: Uuid,
 }
 
