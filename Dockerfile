@@ -11,7 +11,7 @@ WORKDIR /app
 COPY Cargo.toml Cargo.lock ./
 COPY src ./src
 
-RUN cargo build --release --bin server
+RUN cargo build --release --workspace
 
 FROM debian:buster-slim
 
@@ -22,7 +22,11 @@ RUN apt-get update \
  && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /cargo/bin/diesel /usr/local/bin/diesel
+
 COPY --from=builder /app/target/release/server /usr/local/bin/server
+COPY --from=builder /app/target/release/list-devices /usr/local/bin/list-devices
+COPY --from=builder /app/target/release/register /usr/local/bin/register
+
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 COPY migrations ./migrations
 
