@@ -5,6 +5,7 @@ extern crate dotenv;
 pub mod config;
 pub mod database;
 pub mod models;
+pub mod queries;
 pub mod routes;
 pub mod schema;
 pub mod utils;

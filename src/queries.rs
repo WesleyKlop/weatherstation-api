@@ -1,34 +1,12 @@
-use super::schema::devices;
-use super::schema::measurements;
-use chrono::{DateTime, Utc};
+use diesel::{insert_into, PgConnection, QueryResult, RunQueryDsl, sql_query};
 use diesel::prelude::*;
 use diesel::result::Error;
-use diesel::{insert_into, Insertable, PgConnection, QueryResult, RunQueryDsl};
-use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-#[derive(Queryable, Serialize, Associations, Identifiable)]
-#[belongs_to(Device, foreign_key = "created_by")]
-pub struct Measurement {
-    pub id: Uuid,
-    pub humidity: f64,
-    pub temperature: f64,
-    pub carbon_dioxide: f64,
-    pub created_at: DateTime<Utc>,
-    pub updated_at: Option<DateTime<Utc>>,
-    pub location: String,
-    pub created_by: Uuid,
-}
+use crate::models::{Device, Measurement, NewDevice, NewMeasurement, Stats};
 
-#[derive(Insertable, Deserialize)]
-#[table_name = "measurements"]
-pub struct NewMeasurement {
-    pub humidity: f64,
-    pub temperature: f64,
-    pub carbon_dioxide: f64,
-    pub location: String,
-    pub created_by: Uuid,
-}
+use super::schema::devices;
+use super::schema::measurements;
 
 pub fn save_measurement(
     measurement: NewMeasurement,
@@ -53,20 +31,20 @@ pub fn find_measurement(id: Uuid, connection: &PgConnection) -> Result<Measureme
         .first(connection)
 }
 
-#[derive(Queryable, Serialize, Identifiable, Clone)]
-pub struct Device {
-    pub id: Uuid,
-    pub location: String,
-    pub token: String,
-    pub created_at: DateTime<Utc>,
-    pub updated_at: Option<DateTime<Utc>>,
-}
-
-#[derive(Insertable, Deserialize)]
-#[table_name = "devices"]
-pub struct NewDevice {
-    pub location: String,
-    pub token: String,
+pub fn find_stats(connection: &PgConnection) -> Result<Vec<Stats>, Error> {
+    sql_query("\
+select date_trunc('hour', created_at)                        as moment,
+       round(avg(humidity)::numeric, 2)::double precision    as humidity,
+       min(humidity)                                         as min_humidity,
+       max(humidity)                                         as max_humidity,
+       round(avg(temperature)::numeric, 2)::double precision as temperature,
+       min(temperature)                                      as min_temperature,
+       max(temperature)                                      as max_temperature
+from measurements
+group by moment
+order by moment desc;
+    ")
+        .load(connection)
 }
 
 pub fn find_device_by_token(token: String, connection: &PgConnection) -> Result<Device, Error> {

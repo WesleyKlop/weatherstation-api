@@ -42,3 +42,10 @@ Authorization: Bearer 3f3bd49c762d68a60ab40373aa9606cb
 
 GET http://127.0.0.1:8080/api/health
 Accept: application/json
+
+###
+
+GET http://127.0.0.1:8080/api/stats/
+Accept: application/json
+Authorization: Bearer 3f3bd49c762d68a60ab40373aa9606cb
+

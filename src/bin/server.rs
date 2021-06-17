@@ -1,5 +1,6 @@
-use actix_web::{middleware, web::scope, App, HttpServer};
+use actix_web::{App, HttpServer, middleware, web::scope};
 use actix_web_httpauth::middleware::HttpAuthentication;
+
 use weatherstation_api::config::bind_address;
 use weatherstation_api::database::create_pool;
 use weatherstation_api::routes;
@@ -19,17 +20,18 @@ async fn main() -> std::io::Result<()> {
             .data(pool.clone())
             .service(
                 scope("/api")
+                    .service(routes::health)
+                    .wrap(HttpAuthentication::bearer(validator))
                     .service(
                         scope("/measurements")
-                            .wrap(HttpAuthentication::bearer(validator))
                             .service(routes::all_measurements)
                             .service(routes::measurement_by_id)
-                            .service(routes::create_measurement),
+                            .service(routes::create_measurement)
                     )
-                    .service(routes::health),
+                    .service(scope("/stats").service(routes::stats)),
             )
     })
-    .bind(bind_address())?
-    .run()
-    .await
+        .bind(bind_address())?
+        .run()
+        .await
 }
