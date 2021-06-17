@@ -1,4 +1,4 @@
-use actix_web::{App, HttpServer, middleware, web::scope};
+use actix_web::{middleware, web::scope, App, HttpServer};
 use actix_web_httpauth::middleware::HttpAuthentication;
 
 use weatherstation_api::config::bind_address;
@@ -26,12 +26,12 @@ async fn main() -> std::io::Result<()> {
                         scope("/measurements")
                             .service(routes::all_measurements)
                             .service(routes::measurement_by_id)
-                            .service(routes::create_measurement)
+                            .service(routes::create_measurement),
                     )
                     .service(scope("/stats").service(routes::stats)),
             )
     })
-        .bind(bind_address())?
-        .run()
-        .await
+    .bind(bind_address())?
+    .run()
+    .await
 }

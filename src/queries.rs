@@ -1,6 +1,6 @@
-use diesel::{insert_into, PgConnection, QueryResult, RunQueryDsl, sql_query};
 use diesel::prelude::*;
 use diesel::result::Error;
+use diesel::{insert_into, sql_query, PgConnection, QueryResult, RunQueryDsl};
 use uuid::Uuid;
 
 use crate::models::{Device, Measurement, NewDevice, NewMeasurement, Stats};
@@ -32,19 +32,7 @@ pub fn find_measurement(id: Uuid, connection: &PgConnection) -> Result<Measureme
 }
 
 pub fn find_stats(connection: &PgConnection) -> Result<Vec<Stats>, Error> {
-    sql_query("\
-select date_trunc('hour', created_at)                        as moment,
-       round(avg(humidity)::numeric, 2)::double precision    as humidity,
-       min(humidity)                                         as min_humidity,
-       max(humidity)                                         as max_humidity,
-       round(avg(temperature)::numeric, 2)::double precision as temperature,
-       min(temperature)                                      as min_temperature,
-       max(temperature)                                      as max_temperature
-from measurements
-group by moment
-order by moment desc;
-    ")
-        .load(connection)
+    sql_query(include_str!("sql/stats.sql")).load(connection)
 }
 
 pub fn find_device_by_token(token: String, connection: &PgConnection) -> Result<Device, Error> {
