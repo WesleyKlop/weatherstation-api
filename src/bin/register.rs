@@ -1,7 +1,8 @@
 use rand::{distributions::Alphanumeric, Rng};
 use std::env;
 use weatherstation_api::database::establish_connection;
-use weatherstation_api::models::{register_device, NewDevice};
+use weatherstation_api::models::NewDevice;
+use weatherstation_api::queries::register_device;
 
 fn main() {
     dotenv::dotenv().ok();

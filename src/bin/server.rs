@@ -21,9 +21,9 @@ async fn main() -> std::io::Result<()> {
             .service(
                 scope("/api")
                     .service(routes::health)
-                    .wrap(HttpAuthentication::bearer(validator))
                     .service(
                         scope("/measurements")
+                            .wrap(HttpAuthentication::bearer(validator))
                             .service(routes::all_measurements)
                             .service(routes::measurement_by_id)
                             .service(routes::create_measurement),
