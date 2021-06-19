@@ -1,13 +1,22 @@
-use super::database::DbPool;
-use super::models::{find_measurement, find_measurements, save_measurement, NewMeasurement};
-use crate::models::Device;
+use crate::database::DbPool;
+use crate::models::{Device, NewMeasurement};
+use crate::queries::{find_measurement, find_measurements, find_stats, save_measurement};
 use actix_web::{get, post, web, HttpResponse, Responder};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 #[get("/")]
+pub async fn stats(pool: web::Data<DbPool>) -> impl Responder {
+    let connection = pool.get().unwrap();
+
+    web::block(move || find_stats(&connection))
+        .await
+        .map(|stats| HttpResponse::Ok().json(stats))
+}
+
+#[get("/")]
 pub async fn all_measurements(pool: web::Data<DbPool>) -> impl Responder {
-    let connection = pool.get().expect("Failed to db");
+    let connection = pool.get().unwrap();
 
     web::block(move || find_measurements(50, &connection))
         .await
@@ -16,7 +25,7 @@ pub async fn all_measurements(pool: web::Data<DbPool>) -> impl Responder {
 
 #[get("/{id}/")]
 pub async fn measurement_by_id(pool: web::Data<DbPool>, id: web::Path<Uuid>) -> impl Responder {
-    let connection = pool.get().expect("Failed to db");
+    let connection = pool.get().unwrap();
 
     web::block(move || find_measurement(id.into_inner(), &connection))
         .await

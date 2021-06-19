@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: developer
+      POSTGRES_PASSWORD: waitword1337
+      POSTGRES_DB: weatherstation
+    volumes:
+      - 'db-data:/var/lib/postgresql/data'
+    ports:
+      - 5432:5432
+
+volumes:
+  db-data:

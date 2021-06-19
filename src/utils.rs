@@ -1,5 +1,5 @@
 use crate::database::DbPool;
-use crate::models::find_device_by_token;
+use crate::queries::find_device_by_token;
 use actix_web::dev::ServiceRequest;
 use actix_web::error::ErrorUnauthorized;
 use actix_web::{web, Error, HttpMessage};

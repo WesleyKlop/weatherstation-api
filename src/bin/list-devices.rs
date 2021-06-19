@@ -1,5 +1,5 @@
 use weatherstation_api::database::establish_connection;
-use weatherstation_api::models::find_devices;
+use weatherstation_api::queries::find_devices;
 
 fn main() {
     dotenv::dotenv().ok();
