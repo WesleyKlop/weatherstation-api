@@ -7,4 +7,5 @@ select date_trunc('hour', created_at) as moment,
        max(temperature)               as max_temperature
 from measurements
 group by moment
-order by moment desc;
+order by moment desc
+limit

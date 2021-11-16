@@ -31,8 +31,9 @@ pub fn find_measurement(id: Uuid, connection: &PgConnection) -> Result<Measureme
         .first(connection)
 }
 
-pub fn find_stats(connection: &PgConnection) -> Result<Vec<Stats>, Error> {
-    sql_query(include_str!("sql/stats.sql")).load(connection)
+pub fn find_stats(connection: &PgConnection, limit: Option<i32>) -> Result<Vec<Stats>, Error> {
+    sql_query(include_str!("sql/stats.sql").to_owned() + &limit.unwrap_or(100).to_string())
+        .get_results(connection)
 }
 
 pub fn find_device_by_token(token: String, connection: &PgConnection) -> Result<Device, Error> {

@@ -5,11 +5,16 @@ use actix_web::{get, post, web, HttpResponse, Responder};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
+#[derive(Deserialize)]
+pub struct StatsParams {
+    limit: Option<i32>,
+}
+
 #[get("/")]
-pub async fn stats(pool: web::Data<DbPool>) -> impl Responder {
+pub async fn stats(params: web::Query<StatsParams>, pool: web::Data<DbPool>) -> impl Responder {
     let connection = pool.get().unwrap();
 
-    web::block(move || find_stats(&connection))
+    web::block(move || find_stats(&connection, params.limit))
         .await
         .map(|stats| HttpResponse::Ok().json(stats))
 }
