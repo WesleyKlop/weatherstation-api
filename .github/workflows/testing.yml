@@ -21,12 +21,14 @@ jobs:
           toolchain: ${{ env.RUST_VERSION }}
           override: true
           components: rustfmt, clippy
-      - uses: actions/cache@v2.1.6
+      - uses: actions/cache@v2
         with:
           path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            target
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - uses: actions-rs/cargo@v1.0.3
         name: Cargo fmt
@@ -50,12 +52,14 @@ jobs:
           profile: minimal
           toolchain: ${{ env.RUST_VERSION }}
           override: true
-      - uses: actions/cache@v2.1.6
+      - uses: actions/cache@v2
         with:
           path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            target
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - uses: actions-rs/cargo@v1.0.3
         name: Cargo build
