@@ -30,6 +30,8 @@ COPY --from=builder /app/target/release/register /usr/local/bin/register
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 COPY migrations ./migrations
 
+ENV RUST_LOG="actix_web=info"
+
 ENTRYPOINT ["entrypoint.sh"]
 
 CMD ["server", "-m"]
