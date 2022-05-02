@@ -11,23 +11,17 @@ fn main() {
     let args: Vec<String> = env::args().collect();
     let pool = establish_connection();
 
-    let token: String;
-
-    match args.len() {
-        2 => {
-            token = rand::thread_rng()
-                .sample_iter(&Alphanumeric)
-                .take(32)
-                .map(char::from)
-                .collect();
-        }
-        3 => {
-            token = args[2].to_string();
-        }
+    let token = match args.len() {
+        2 => rand::thread_rng()
+            .sample_iter(&Alphanumeric)
+            .take(32)
+            .map(char::from)
+            .collect(),
+        3 => args[2].to_string(),
         _ => {
             panic!("What are you trying to do?");
         }
-    }
+    };
 
     if token.len() != 32 {
         panic!("Token must have a length of 32, but got {}", token.len());
