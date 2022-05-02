@@ -1,4 +1,6 @@
-table! {
+// @generated automatically by Diesel CLI.
+
+diesel::table! {
     devices (id) {
         id -> Uuid,
         location -> Varchar,
@@ -8,7 +10,7 @@ table! {
     }
 }
 
-table! {
+diesel::table! {
     measurements (id) {
         id -> Uuid,
         humidity -> Float8,
@@ -21,6 +23,9 @@ table! {
     }
 }
 
-joinable!(measurements -> devices (created_by));
+diesel::joinable!(measurements -> devices (created_by));
 
-allow_tables_to_appear_in_same_query!(devices, measurements,);
+diesel::allow_tables_to_appear_in_same_query!(
+    devices,
+    measurements,
+);

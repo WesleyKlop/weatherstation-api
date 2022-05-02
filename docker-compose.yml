@@ -2,13 +2,12 @@ version: '3.8'
 
 services:
   postgres:
-    image: postgres
+    image: postgres:14
     environment:
-      POSTGRES_USER: developer
-      POSTGRES_PASSWORD: waitword1337
-      POSTGRES_DB: weatherstation
+      POSTGRES_PASSWORD: password
     volumes:
       - 'db-data:/var/lib/postgresql/data'
+      - './docker/dev-initdb.d:/docker-entrypoint-initdb.d:ro'
     ports:
       - 5432:5432
 

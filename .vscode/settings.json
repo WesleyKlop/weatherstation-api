@@ -1,3 +1,13 @@
 {
-  "rust-analyzer.checkOnSave.command": "clippy"
+  "rust-analyzer.checkOnSave.command": "clippy",
+
+  "plpgsqlLanguageServer.database": "weatherstation",
+  "plpgsqlLanguageServer.user": "postgres",
+  "plpgsqlLanguageServer.password": "password",
+  "plpgsqlLanguageServer.definitionFiles": [
+    "migrations/**/*.sql",
+  ],
+  "files.associations": {
+    "*.sql": "postgres"
+  }
 }
