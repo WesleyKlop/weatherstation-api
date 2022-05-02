@@ -8,4 +8,10 @@ default-run = "server"
 [dependencies]
 color-eyre = { version = "0.5", default-features = false }
 dotenv = "0.15.0"
-diesel = { version = "2.0.0-rc.0", features = ["postgres"] }
+uuid = { version = "1.0.0", features = ["v4"] }
+chrono = "0.4.19"
+
+
+[dependencies.diesel]
+version = "2.0.0-rc.0"
+features = ["postgres", "chrono", "uuid"]

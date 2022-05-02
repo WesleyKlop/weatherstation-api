@@ -1,1 +1,2 @@
-drop table measurements;
+DROP TABLE measurements;
+

@@ -1,7 +1,8 @@
-alter table measurements
-    alter column created_at type timestamp,
-    alter column updated_at type timestamp;
+ALTER TABLE measurements
+    ALTER COLUMN created_at TYPE timestamp,
+    ALTER COLUMN updated_at TYPE timestamp;
 
-alter table devices
-    alter column created_at type timestamp,
-    alter column updated_at type timestamp;
+ALTER TABLE devices
+    ALTER COLUMN created_at TYPE timestamp,
+    ALTER COLUMN updated_at TYPE timestamp;
+

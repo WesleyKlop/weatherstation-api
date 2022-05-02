@@ -1,2 +1,4 @@
-drop trigger set_updated_at on devices;
-drop trigger set_updated_at on measurements;
+DROP TRIGGER set_updated_at ON devices;
+
+DROP TRIGGER set_updated_at ON measurements;
+

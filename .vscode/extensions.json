@@ -2,6 +2,6 @@
   "recommendations": [
     "matklad.rust-analyzer",
     "ms-azuretools.vscode-docker",
-    "bungcip.better-toml"
+    "bungcip.better-toml",
   ]
 }

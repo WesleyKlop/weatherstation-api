@@ -1,19 +1,25 @@
-alter table measurements
-    add column location   varchar not null default 'unknown',
-    add column created_by uuid    null references devices (id);
+ALTER TABLE measurements
+    ADD COLUMN location varchar NOT NULL DEFAULT 'unknown',
+    ADD COLUMN created_by uuid NULL REFERENCES devices (id);
 
-do
+DO $$
+DECLARE
+    device_id uuid;
+BEGIN
+    INSERT INTO devices (location, token, created_at)
+        VALUES ('unknown', md5(random()::text), now())
+    RETURNING
+        id INTO device_id;
+    UPDATE
+        measurements
+    SET
+        created_by = device_id
+    WHERE
+        created_by IS NULL;
+END;
 $$
-    declare
-        device_id uuid;
-    begin
-        insert into devices (location, token, created_at)
-        values ('unknown', md5(random()::text), now())
-        returning id into device_id;
+LANGUAGE plpgsql;
 
-        update measurements set created_by = device_id where created_by is null;
-    end;
-$$ language plpgsql;
+ALTER TABLE measurements
+    ALTER COLUMN created_by SET NOT NULL;
 
-alter table measurements
-    alter column created_by set not null;

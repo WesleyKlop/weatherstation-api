@@ -1,1 +1,2 @@
-drop table devices;
+DROP TABLE devices;
+

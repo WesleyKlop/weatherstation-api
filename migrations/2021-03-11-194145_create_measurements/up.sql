@@ -1,12 +1,9 @@
-
-create table measurements
-(
-    id             UUID      not null default uuid_generate_v4() primary key,
-
-    humidity       float     not null,
-    temperature    float     not null,
-    carbon_dioxide float     not null,
-
-    created_at     timestamp not null default now(),
-    updated_at     timestamp null
+CREATE TABLE measurements (
+    id uuid NOT NULL DEFAULT uuid_generate_v4 () PRIMARY KEY,
+    humidity float NOT NULL,
+    temperature float NOT NULL,
+    carbon_dioxide float NOT NULL,
+    created_at timestamp NOT NULL DEFAULT now(),
+    updated_at timestamp NULL
 );
+

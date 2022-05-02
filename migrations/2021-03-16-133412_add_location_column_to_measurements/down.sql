@@ -1,3 +1,4 @@
-alter table measurements
-    drop column "location",
-    drop column "created_by" ;
+ALTER TABLE measurements
+    DROP COLUMN "location",
+    DROP COLUMN "created_by";
+
