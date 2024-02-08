@@ -1,4 +1,4 @@
-FROM rust:1.75.0 as builder
+FROM rust:1.76.0 as builder
 
 ENV CARGO_HOME="/cargo"
 
